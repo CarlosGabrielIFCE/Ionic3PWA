@@ -1,14 +1,43 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
+
+
     <ion-title>
-      Ionic Blank
+      Ionic Storage Tasks
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onSave('create')">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+  <p *ngIf="tasks && tasks.length == 0; else tasksList">No Tasks.</p>
+
+  <ng-template #tasksList>
+    <ion-list>
+
+      <ion-item-sliding *ngFor="let task of tasks" #itemSliding>
+        <ion-item>
+          <ion-label>
+            {{ task.title }}
+          </ion-label>
+          <ion-toggle [ngModel]="task.done" (ngModelChange)="task.done=$event; taskService.update(task)"></ion-toggle>
+        </ion-item>
+        <ion-item-options side="left">
+          <button ion-button icon-only color="primary" (click)="onSave('update', itemSliding, task)">
+            <ion-icon name="create"></ion-icon>
+          </button>
+          <button ion-button icon-only color="danger" (click)="onDelete(task)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+
+    </ion-list>
+  </ng-template>
 </ion-content>

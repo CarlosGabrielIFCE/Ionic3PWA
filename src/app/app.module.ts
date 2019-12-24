@@ -7,6 +7,12 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
+import { IonicStorageModule } from '@ionic/storage';
+import { TaskService } from '../providers/task/task.service';
+import { Network } from '@ionic-native/network';
+import { TASK_API_URL } from '../config/task-api-url.injectiontoken';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -14,7 +20,13 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    HttpClientModule,
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot({
+      name: '__dynamicbox',
+      storeName: 'tasks',
+      driverOrder: ['sqlite', 'indexeddb', 'websql', 'localstorage']
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -24,7 +36,10 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    TaskService,
+    Network,
+    { provide: TASK_API_URL, useValue: 'http://localhost:3000/api/v1'}
   ]
 })
 export class AppModule {}
